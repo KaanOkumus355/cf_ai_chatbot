@@ -9,7 +9,22 @@
  */
 
 export default {
-	async fetch(request, env, ctx) {
-		return new Response('Hello Worker!');
-	},
+  async fetch(request, env) {
+
+	const Humanhistory = await env.CHAT_MEMORY.get("conversation");
+
+    const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+      prompt: "What is the origin of the phrase Hello, World",
+    });
+
+	const newEntry = {
+		human: "What is the origin of the phrase Hello, World",
+		ai: response.response,
+		timestamp: new Date().toISOString()
+	}
+
+	await env.CHAT_MEMORY.put("conversation", JSON.stringify(newEntry));
+
+    return new Response(JSON.stringify(response));
+  },
 };
