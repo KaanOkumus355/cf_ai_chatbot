@@ -13,7 +13,7 @@ export default {
 
 	const Humanhistory = await env.CHAT_MEMORY.get("conversation");
 
-    const response = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+    const response = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast ", {
       prompt: "What is the origin of the phrase Hello, World",
     });
 
