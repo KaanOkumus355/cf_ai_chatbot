@@ -11,20 +11,49 @@
 export default {
   async fetch(request, env) {
 
-	const Humanhistory = await env.CHAT_MEMORY.get("conversation");
+	if (request.method === 'POST') {
+		try {
+			const { message } = await request.json(); 
 
-    const response = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast ", {
-      prompt: "What is the origin of the phrase Hello, World",
-    });
+		if (!message) {
+			return new Response(JSON.stringify({error: "Message is required"}), {
+				status: 400,
+				headers: { 'Content-Type': 'application/json' }
+			});
+		}
 
-	const newEntry = {
-		human: "What is the origin of the phrase Hello, World",
-		ai: response.response,
-		timestamp: new Date().toISOString()
-	}
+		const history = await env.CHAT_MEMORY.get("conversation");
 
-	await env.CHAT_MEMORY.put("conversation", JSON.stringify(newEntry));
+		const response = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+			messages: [
+				{role: 'system', content: 'You are a helpful assistant.'},
+				{role: 'user' , content: message}
+			]
+		});
 
-    return new Response(JSON.stringify(response));
-  },
+		const newEntry = {
+			human: message,
+			ai: response.response,
+			timestamp: new Date().toISOString()
+		};
+
+		await env.CHAT_MEMORY.put("conversation", JSON.stringify(newEntry));
+
+		return new Response(JSON.stringify({response: response.response}), {
+			headers: { 'Content-Type': 'application/json' }
+			});
+		} 
+		catch (error) {
+			return new Response(JSON.stringify({error: error.message}), {
+				status: 500,
+				headers: { 'Content-Type': 'application/json' }
+				});
+			}
+		}
+		return new Response(JSON.stringify({
+			message: 'Send a POST request with {"message": "your question" } to chat '
+		}), {
+			headers: { 'Content-Type': 'application/json' }
+		});
+	},
 };
