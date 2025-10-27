@@ -24,9 +24,20 @@ export default {
 
 		const history = await env.CHAT_MEMORY.get("conversation");
 
+		let conversationHistory = [];
+		if (history) {
+			const historyObj = JSON.parse(history);
+
+			conversationHistory = [
+				{role: 'user', content: historyObj.human },
+				{role: 'assistant' , content: historyObj.ai }
+			];
+		} 
+
 		const response = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
 			messages: [
-				{role: 'system', content: 'You are a helpful assistant.'},
+				{role: 'system', content: 'You are a helpful assistant.' },
+				...conversationHistory,
 				{role: 'user' , content: message}
 			]
 		});
