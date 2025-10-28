@@ -11,6 +11,16 @@
 export default {
   async fetch(request, env) {
 
+	if (request.method === 'OPTIONS') {
+		return new Response(null, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+				'Access-Control-Allow-Headers': 'Content-Type',
+			}
+		});
+	}
+
 	if (request.method === 'POST') {
 		try {
 			const { message } = await request.json(); 
@@ -18,7 +28,9 @@ export default {
 		if (!message) {
 			return new Response(JSON.stringify({error: "Message is required"}), {
 				status: 400,
-				headers: { 'Content-Type': 'application/json' }
+				headers: { 'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*'
+				}
 			});
 		}
 
@@ -51,20 +63,26 @@ export default {
 		await env.CHAT_MEMORY.put("conversation", JSON.stringify(newEntry));
 
 		return new Response(JSON.stringify({response: response.response}), {
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*'
+			}
 			});
 		} 
 		catch (error) {
 			return new Response(JSON.stringify({error: error.message}), {
 				status: 500,
-				headers: { 'Content-Type': 'application/json' }
+				headers: { 'Content-Type': 'application/json' ,
+				'Access-Control-Allow-Origin': '*'
+				}
 				});
 			}
 		}
 		return new Response(JSON.stringify({
 			message: 'Send a POST request with {"message": "your question" } to chat '
 		}), {
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*'
+			}
 		});
 	},
 };
