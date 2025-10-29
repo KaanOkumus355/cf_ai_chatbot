@@ -4,17 +4,17 @@ const sendButton = document.querySelector('button');
 const typingIndicator = document.getElementById('typingIndicator');
 
 function showTypingIndicator() {
-    hideTypingIndicator();
+  hideTypingIndicator();
     
-    typingIndicator.style.display = 'flex';
+  typingIndicator.style.display = 'flex';
 
-    messageDiv.scrollTop = messageDiv.scrollHeight;
+  messageDiv.scrollTop = messageDiv.scrollHeight;
 }
 
 function hideTypingIndicator() {
-    if (typingIndicator) {
-        typingIndicator.style.display = 'none';
-    }
+  if (typingIndicator) {
+    typingIndicator.style.display = 'none';
+  }
 }
 
 async function sendMessage() {

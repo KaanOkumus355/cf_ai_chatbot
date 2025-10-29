@@ -48,7 +48,7 @@ export default {
 
 		const response = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
 			messages: [
-				{role: 'system', content: 'You are a helpful assistant.' },
+				{role: 'system', content: 'You are a versatile AI assistant. Provide helpful, accurate responses to questions on any topic. Be clear, concise, and focus on being genuinely useful to the user.' },
 				...conversationHistory,
 				{role: 'user' , content: message}
 			]
