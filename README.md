@@ -53,6 +53,7 @@ cd public
 npx wrangler pages deploy . --project-name=cf-ai-chatbot-frontend
 ```
 ## 📁 Project Structure
+```bash
 cf_ai_chatbot/
 ├── src/
 │   └── index.js          # Cloudflare Worker with AI integration
@@ -62,8 +63,9 @@ cf_ai_chatbot/
 │   └── main.js           # Frontend logic
 ├── wrangler.jsonc        # Worker configuration
 ├── README.md            # This file
-└── PROMPTS.md           # AI development prompts and diary
-
+├── PROMPTS.md           # AI development prompts and diary
+└── LICENSE              # MIT License
+```
 ## 🔧 API Endpoints
 
 ### POST /
@@ -98,5 +100,5 @@ CORS configured for frontend-backend communication
 Conversation history stored with timestamps in KV
 
 ## 📄 License
-MIT License - see  file for details
+MIT License - see [LICENSE](LICENSE) file for details
  
