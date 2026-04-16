@@ -8,7 +8,7 @@ A full-stack AI chat application built on Cloudflare's platform featuring real-t
 
 ## 🎯 Features
 - **AI Conversations**: Powered by Llama 3.3 via Cloudflare Workers AI
-- **Conversation Memory**: Remembers chat history using Cloudflare KV storage
+- **Session-Based Memory**: Maintains conversation context during active sessions using Cloudflare KV storage.
 - **Real-time Chat**: Clean, responsive interface built with Cloudflare Pages
 - **Typing Indicators**: Visual feedback while AI processes responses
 - **Professional UI**: Modern gradient design with message bubbles
