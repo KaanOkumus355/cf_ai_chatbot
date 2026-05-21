@@ -16,7 +16,7 @@ export default {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-				'Access-Control-Allow-Headers': 'Content-Type',
+				'Access-Control-Allow-Headers': 'Content-Type, Session-Id',
 			}
 		});
 	}
@@ -34,33 +34,32 @@ export default {
 			});
 		}
 
-		const history = await env.CHAT_MEMORY.get("conversation");
+		const sessionId = request.headers.get('Session-Id') || 'default-session';
+		const memoryKey = `conversation:${sessionId}`;
 
-		let conversationHistory = [];
-		if (history) {
-			const historyObj = JSON.parse(history);
+		const history = await env.CHAT_MEMORY.get(memoryKey);
 
-			conversationHistory = [
-				{role: 'user', content: historyObj.human },
-				{role: 'assistant' , content: historyObj.ai }
-			];
-		} 
+		let conversationHistory = history ? JSON.parse(history) : [];
+		
+		conversationHistory.push({
+			role: 'user',
+			content: message
+		})
 
 		const response = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
 			messages: [
 				{role: 'system', content: 'You are a versatile AI assistant. Provide helpful, accurate responses to questions on any topic. Be clear, concise, and focus on being genuinely useful to the user.' },
-				...conversationHistory,
-				{role: 'user' , content: message}
+				...conversationHistory.slice(-20)
 			]
 		});
 
-		const newEntry = {
-			human: message,
-			ai: response.response,
-			timestamp: new Date().toISOString()
-		};
+		conversationHistory.push({
+			role: "assistant",
+			content: response.response
+		});
 
-		await env.CHAT_MEMORY.put("conversation", JSON.stringify(newEntry));
+
+		await env.CHAT_MEMORY.put(memoryKey, JSON.stringify(conversationHistory));
 
 		return new Response(JSON.stringify({response: response.response}), {
 			headers: { 'Content-Type': 'application/json',

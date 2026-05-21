@@ -21,6 +21,13 @@ async function sendMessage() {
   const message = textarea.value.trim();
   if (!message) return;
 
+  let sessionId = localStorage.getItem('chat_session_id');
+
+  if (!sessionId) {
+    sessionId = 'session-' + crypto.randomUUID();
+    localStorage.setItem('chat_session_id', sessionId);
+  }
+
   addMessage('user', message);
   textarea.value = '';
 
@@ -29,7 +36,7 @@ async function sendMessage() {
   try {
     const response = await fetch('https://cf-ai-chatbot.kaan-ai-chatbot.workers.dev/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Session-Id': sessionId },
       body: JSON.stringify({ message })
     });
 
