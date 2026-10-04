@@ -3,8 +3,7 @@
 A full-stack AI chat application built on Cloudflare's platform featuring real-time conversations with memory using Llama 3.3.
 
 ## 🚀 Live Demo
-**Frontend**: https://7e41a682.cf-ai-chatbot-frontend.pages.dev/
-**Backend API**: https://cf-ai-chatbot.kaan-ai-chatbot.workers.dev
+**Frontend**: https://cf-ai-chatbot-frontend.pages.dev/
 
 ## 🎯 Features
 - **AI Conversations**: Powered by Llama 3.3 via Cloudflare Workers AI
