@@ -77,6 +77,15 @@ export default {
 		}
 	}
 
+	const sessionId = new URL(request.url).searchParams.get('sessionId');
+	if (sessionId !== null) {
+		if (!UUID_RE.test(sessionId)) {
+			return json({ error: "A valid sessionId (UUID) is required" }, 400);
+		}
+		const history = await env.CHAT_MEMORY.get(`history:${sessionId}`);
+		return json({ history: history ? JSON.parse(history) : [] });
+	}
+
 	return json({
 		message: 'Send a POST request with {"message": "your question", "sessionId": "<uuid>" } to chat '
 	});

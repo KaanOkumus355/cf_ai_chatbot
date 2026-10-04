@@ -86,6 +86,20 @@ function addMessage(sender, text) {
   messageDiv.scrollTop = messageDiv.scrollHeight;
 }
 
+async function loadHistory() {
+  try {
+    const sessionId = getSessionId();
+    const response = await fetch(`${API_URL}?sessionId=${encodeURIComponent(sessionId)}`);
+    const data = await response.json();
+    if (sessionId !== getSessionId()) return; // "New chat" was clicked meanwhile
+    (data.history || []).forEach((m) => addMessage(m.role === 'user' ? 'user' : 'ai', m.content));
+  } catch {
+    // History is a convenience; the chat still works without it.
+  }
+}
+
+loadHistory();
+
 sendButton.addEventListener('click', sendMessage);
 newChatButton.addEventListener('click', startNewChat);
 textarea.addEventListener('keypress', (e) => {
